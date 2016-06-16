@@ -33,44 +33,40 @@ public class PRunnable implements Runnable
 		for(int i=0;i<20;i++)
 			if(collisions[i]==true)
 			{
-				if( x == (frame.r[i].getX()+1) )
+				if( (x - frame.r[i].getX() ) > 0 && (x - frame.r[i].getX() ) <= 17 )
 					l=true;
 				
-				if( x == (frame.r[i].getX()-1) )
+				if( (frame.r[i].getX() - x) > 0 && (frame.r[i].getX() - x) <= 17 )
 					p=true;
 				
-				if( y == (frame.r[i].getX()+1) )
+				if( (y - frame.r[i].getY() ) > 0 && (y - frame.r[i].getY() ) <= 17 )
 					d=true;
 				
-				if( y == (frame.r[i].getX()-1) )
+				if( (frame.r[i].getY() - y) > 0 && (frame.r[i].getY() - y) <= 17 )
 					g=true;
 			}
 		
 		if(l==false && p==true && g==true && d==true)//w lewo
 		{
 			x--;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}
 			
 		if(l==true && p==false && g==true && d==true)//w prawo
 		{
 			x++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 				
 		if(l==true && p==true && g==false && d==true)//w gore
 		{
 			y++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
 		if(l==true && p==true && g==true && d==false)//w dol
 		{
 			y--;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -80,7 +76,6 @@ public class PRunnable implements Runnable
 				x--;
 			else
 				x++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -90,7 +85,6 @@ public class PRunnable implements Runnable
 				y--;
 			else
 				y++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -110,7 +104,6 @@ public class PRunnable implements Runnable
 				y++;
 				break;
 			}
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -130,7 +123,6 @@ public class PRunnable implements Runnable
 				y--;
 				break;
 			}
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 				
@@ -150,7 +142,6 @@ public class PRunnable implements Runnable
 				x--;
 				break;
 			}
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 		
@@ -170,13 +161,11 @@ public class PRunnable implements Runnable
 				x++;
 				break;
 			}
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 		
 		if(l==true && p==true && g==true && d==true)//nigdzie
 		{
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -186,7 +175,6 @@ public class PRunnable implements Runnable
 				x++;
 			else
 				y--;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 		
@@ -196,7 +184,6 @@ public class PRunnable implements Runnable
 				x--;
 			else
 				y++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -206,7 +193,6 @@ public class PRunnable implements Runnable
 				x--;
 			else
 				y--;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}	
 			
@@ -216,7 +202,6 @@ public class PRunnable implements Runnable
 				y++;
 			else
 				x++;
-			try{Thread.sleep(20);}catch (InterruptedException e){}
 			return false;
 		}
 		
