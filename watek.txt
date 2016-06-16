@@ -1,0 +1,26 @@
+/**Nowy watek*/
+public class PRunnable implements Runnable
+{
+	PFrame frame;
+
+	public PRunnable(PFrame frame)
+	{
+		this.frame = frame;
+	}
+	
+	@Override
+	public void run()
+	{
+		while(true)
+		{
+			try
+			{
+				//czas uspienia - szybkosc gry (w zaleznosci od levelu)
+				Thread.sleep( ... );
+			}
+			catch (InterruptedException e){}
+			
+		...
+		}
+	}
+}
