@@ -23,7 +23,7 @@ public class PFrame extends JFrame
 		
 		for(int i=0;i<10;i++)
 		{
-			r[i] = new PRunnable(this,rnd.nextInt(400),rnd.nextInt(500));
+			r[i] = new PRunnable(this,rnd.nextInt(400)+30,rnd.nextInt(500)+40);
 			t[i] = new Thread(r[i]);
 			t[i].start();
 			System.out.println("watek" + i + "ruszyl");
