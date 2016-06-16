@@ -23,9 +23,10 @@ public class PFrame extends JFrame
 		
 		for(int i=0;i<10;i++)
 		{
-			t[i] = new Thread(r[i]);
 			r[i] = new PRunnable(this,rnd.nextInt(400),rnd.nextInt(500));
+			t[i] = new Thread(r[i]);
 			t[i].start();
+			System.out.println("watek" + i + "ruszyl");
 		}
 	}
 	
@@ -61,7 +62,7 @@ public class PFrame extends JFrame
 			Image image = new ImageIcon("Placyk.png").getImage();
 			
 			//obraz
-			g.drawImage(image, 0, 0, null);
+			g2.drawImage(image, 0, 0, null);
 			
 			//podpis
 			g2.setColor(Color.BLACK);
@@ -70,14 +71,13 @@ public class PFrame extends JFrame
 			g2.drawString("Pawel Kowalczyk", WIDTH-120, HEIGHT+5);
 			
 			//ludziki
-			int x=0;
-			int y=0;
-			
 			for(int i=0;i<10;i++)
 			{
-				x=r[i].getX();
-				y=r[i].getY();
-				g2.fill(new Ellipse2D.Double(x, y, 10, 10));
+				g2.setColor(Color.BLACK);
+				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 17, 17));
+				
+				g2.setColor(r[i].getC());
+				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 15, 15));
 			}
 		}
 		
