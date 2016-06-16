@@ -9,6 +9,7 @@ public class PFrame extends JFrame
 {
 	public PRunnable r[];
 	public Thread t[];
+	public int size;
 	
 	//konstruktor glownej klasy programu - ramki
 	public PFrame()
@@ -16,6 +17,7 @@ public class PFrame extends JFrame
 		add(new ImageComponent());
 		pack();
 		
+		size = 17;
 		r = new PRunnable[20];
 		t = new Thread[20];
 		Random rnd = new Random();
@@ -50,7 +52,7 @@ public class PFrame extends JFrame
 		for(int i=0;i<20;i++)
 			for(int j=i+1;j<20;j++)
 			{
-				if( (r[i].getX()==r[j].getX()+1) || (r[i].getX()==r[j].getX()-1) || (r[i].getY()==r[j].getY()+1) || (r[i].getY()==r[j].getY()-1) )
+				if( Math.abs(r[i].getX() - r[j].getX() )<=size && Math.abs(r[i].getY() - r[j].getY() )<=size )
 				{
 					r[i].setCollision(j);
 					r[j].setCollision(i);
@@ -90,10 +92,10 @@ public class PFrame extends JFrame
 			for(int i=0;i<20;i++)
 			{
 				g2.setColor(Color.BLACK);
-				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 17, 17));
+				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), size, size));
 				
 				g2.setColor(r[i].getC());
-				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 15, 15));
+				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), size-2, size-2));
 			}
 			
 			checkCollisions();
