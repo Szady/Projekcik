@@ -1,152 +1,39 @@
 package tetris;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
 /**Glowna klasa programu - ramka*/
-public class GameFrame extends JFrame implements KeyListener
+public class PFrame extends JFrame implements KeyListener
 {
 	
 	/**zwraca nowa figure*/
 	public Fig newFig()
 	{
-		Fig nfig = null;
-		
-		//losowanie koloru i obrotu figury
+
+		//losowanie
 		Random rnd = new Random();
 		int col = rnd.nextInt(6)+1;
 		int rot = rnd.nextInt(4);
 		
-		//losowanie figury
 		switch(rnd.nextInt(7))
 		{
-			case 0:
-				nfig = (new FigQuadra(tab, this, col, rot));
-				break;
-			case 1:
-				nfig = (new FigL(tab, this, col, rot));
-				break;
-			case 2:
-				nfig = (new FiginvL(tab, this, col, rot));
-				break;
-			case 3:
-				nfig = (new FigI(tab, this, col, rot));
-				break;
-			case 4:
-				nfig = (new FigZ(tab, this, col, rot));
-				break;
-			case 5:
-				nfig = (new FiginvZ(tab, this, col, rot));
-				break;
-			case 6:
-				nfig = (new FigT(tab, this, col, rot));
-				break;
+
 		}
-		return nfig;
-	}
-	
-	/**sekwencja czynnosci po upadku klocka*/
-	public void klocekUpadl(int h)
-	{
-		audio.down();
-		gs.add_score(h, false);
-		s.skanuj(this, h);
-		fig = newFig();
-	}
-	
-	/**sekwencja czynnosci po przegranej*/
-	public void GameOver()
-	{
-		run_flag=false;
-		gameover_flag=true;
-		repaint();
-		audio.stop_music();
-		audio.gameover();
-		gs.check_top();
-	}
-	
-	/**sekwencja czynnosci po starcie nowej gry*/
-	public void Start()
-	{
-		czyscTab();
-		
-		if(gameover_flag=true)
-		{
-			gs.del_score();
-			gameover_flag=false;
-		}
-		
-		fig = newFig();
-		run_flag=true;
-		audio.play_music();
+
 	}
 	
 	/**konstruktor glownej klasy programu - ramki*/
 	public GameFrame()
 	{
-		run_flag=false;
-		gameover_flag=false;
-		
 		add(new ImageComponent());
 		pack();
-		
-		tab = new int[10][20];
-		
-		gs = new GameState(this);
 		
 		Runnable r = new FigRunnable(this);
 		Thread t = new Thread(r);
 		t.start();
-		
-		s = new Skaner();
-		audio = new Audio();
-		
-		addKeyListener(this);//rejestracja listenera
-	}
-	
-	/**sterowanie - wcisniecie klawisza*/
-	@Override
-	public void keyPressed(KeyEvent evt)
-	{
-	    switch(evt.getKeyCode())
-	    {
-	    	case KeyEvent.VK_LEFT:
-	    		if(run_flag==true)
-	    			fig.MoveLeft(tab);
-	    		break;
-	    	case KeyEvent.VK_RIGHT:
-	    		if(run_flag==true)
-	    			fig.MoveRight(tab);
-	    		break;
-	    	case KeyEvent.VK_DOWN:
-	    		if(run_flag==true)
-	    			fig.MoveDown(tab);
-	    		break;
-	    	case KeyEvent.VK_UP:
-	    		if(run_flag==true)
-	    			fig.Rotate(tab);
-	    		break;
-	    	case KeyEvent.VK_ESCAPE:
-	    		System.exit(EXIT_ON_CLOSE);
-	    		break;
-	    	case KeyEvent.VK_ENTER:
-	    		if(run_flag==false)
-	    			Start();
-	    		break;
-	    }
-	}
-	
-	/**sterowanie - puszczenie klawisza - nieuzywane*/
-	@Override
-	public void keyReleased(KeyEvent evt){}
-	
-	/**sterowanie - wcisniecie znaku - nieuzywane*/
-	@Override
-	public void keyTyped(KeyEvent evt){}
 	
 	/**utworzenie ramki*/
 	public static void main(String[] args)
