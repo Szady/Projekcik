@@ -6,56 +6,10 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
-//Ciastko z kremem
+
 /**Glowna klasa programu - ramka*/
 public class GameFrame extends JFrame implements KeyListener
 {
-	/**tablica odzwierciedlajaca plansze*/
-	private int[][] tab;
-	/**spadajacy klocek*/
-	private Fig fig;
-	/**flaga czy gra jest w trakcie*/
-	private boolean run_flag;
-	/**flaga przegranej*/
-	private boolean gameover_flag;
-	/**skaner sprawdzajacy czy nalezy usunac linie*/
-	private Skaner s;
-	/**licznik punktow*/
-	public GameState gs;
-	/**dzwieki i muzyka*/
-	public Audio audio;
-	
-	/**czyszczenie tablicy odzwierciedlajacej plansze*/
-	public void czyscTab()
-	{
-		for(int i=0; i<10; i++)
-			for(int j=0; j<20; j++)
-				tab[i][j]=0;
-	}
-	
-	/**nadpisanie tablicy odzwierciedlajacej plansze*/
-	public void setTab(int[][] ntab)
-	{
-		this.tab = ntab;
-	}
-	
-	/**zwraca tablice odzwierciedlajaca plansze*/
-	public int[][] getTab()
-	{
-		return tab;
-	}
-	
-	/**zwraca flage czy gra jest w trakcie*/
-	public boolean getrun_flag()
-	{
-		return run_flag;
-	}
-	
-	/**zwraca aktualna figure*/
-	public Fig getfig()
-	{
-		return fig;
-	}
 	
 	/**zwraca nowa figure*/
 	public Fig newFig()
