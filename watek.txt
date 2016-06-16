@@ -46,6 +46,11 @@ public class PRunnable implements Runnable
 					g=true;
 			}
 		
+		if(l==false && p==false && g==false && d==false)//brak
+		{
+			return true;
+		}
+		
 		if(l==false && p==true && g==true && d==true)//w lewo
 		{
 			x--;
