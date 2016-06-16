@@ -7,7 +7,6 @@ import java.util.Random;
 //Glowna klasa programu - ramka
 public class PFrame extends JFrame
 {
-
 	public PRunnable r[];
 	public Thread t[];
 	
@@ -17,16 +16,15 @@ public class PFrame extends JFrame
 		add(new ImageComponent());
 		pack();
 		
-		r = new PRunnable[10];
-		t = new Thread[10];
+		r = new PRunnable[20];
+		t = new Thread[20];
 		Random rnd = new Random();
 		
-		for(int i=0;i<10;i++)
+		for(int i=0;i<20;i++)
 		{
-			r[i] = new PRunnable(this,rnd.nextInt(400)+30,rnd.nextInt(500)+40);
+			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50);
 			t[i] = new Thread(r[i]);
 			t[i].start();
-			System.out.println("watek" + i + "ruszyl");
 		}
 	}
 	
@@ -38,13 +36,31 @@ public class PFrame extends JFrame
 			public void run()
 			{
 				PFrame frame = new PFrame();
-				frame.setTitle("Placyk by Szady & Michu4000");
+				frame.setTitle("Placyk by SlimSzady & Michu4k");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setLocationByPlatform(true);
 				frame.setResizable(false);
 				frame.setVisible(true);
 			}
 		});
+	}
+	
+	private void checkCollisions()
+	{
+		for(int i=0;i<20;i++)
+			for(int j=i+1;j<20;j++)
+			{
+				if( (r[i].getX()==r[j].getX()+1) || (r[i].getX()==r[j].getX()-1) || (r[i].getY()==r[j].getY()+1) || (r[i].getY()==r[j].getY()-1) )
+				{
+					r[i].setCollision(j);
+					r[j].setCollision(i);
+				}
+				else
+				{
+					r[i].clearCollision(j);
+					r[j].clearCollision(i);
+				}
+			}
 	}
 	
 	//Komponent na ktorym wszystko jest malowane
@@ -71,7 +87,7 @@ public class PFrame extends JFrame
 			g2.drawString("Pawel Kowalczyk", WIDTH-120, HEIGHT+5);
 			
 			//ludziki
-			for(int i=0;i<10;i++)
+			for(int i=0;i<20;i++)
 			{
 				g2.setColor(Color.BLACK);
 				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 17, 17));
@@ -79,6 +95,8 @@ public class PFrame extends JFrame
 				g2.setColor(r[i].getC());
 				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), 15, 15));
 			}
+			
+			checkCollisions();
 		}
 		
 		//zwraca wymiary komponentu
