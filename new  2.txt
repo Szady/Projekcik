@@ -1,0 +1,331 @@
+package tetris;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Random;
+
+/**Glowna klasa programu - ramka*/
+public class GameFrame extends JFrame implements KeyListener
+{
+	/**tablica odzwierciedlajaca plansze*/
+	private int[][] tab;
+	/**spadajacy klocek*/
+	private Fig fig;
+	/**flaga czy gra jest w trakcie*/
+	private boolean run_flag;
+	/**flaga przegranej*/
+	private boolean gameover_flag;
+	/**skaner sprawdzajacy czy nalezy usunac linie*/
+	private Skaner s;
+	/**licznik punktow*/
+	public GameState gs;
+	/**dzwieki i muzyka*/
+	public Audio audio;
+	
+	/**czyszczenie tablicy odzwierciedlajacej plansze*/
+	public void czyscTab()
+	{
+		for(int i=0; i<10; i++)
+			for(int j=0; j<20; j++)
+				tab[i][j]=0;
+	}
+	
+	/**nadpisanie tablicy odzwierciedlajacej plansze*/
+	public void setTab(int[][] ntab)
+	{
+		this.tab = ntab;
+	}
+	
+	/**zwraca tablice odzwierciedlajaca plansze*/
+	public int[][] getTab()
+	{
+		return tab;
+	}
+	
+	/**zwraca flage czy gra jest w trakcie*/
+	public boolean getrun_flag()
+	{
+		return run_flag;
+	}
+	
+	/**zwraca aktualna figure*/
+	public Fig getfig()
+	{
+		return fig;
+	}
+	
+	/**zwraca nowa figure*/
+	public Fig newFig()
+	{
+		Fig nfig = null;
+		
+		//losowanie koloru i obrotu figury
+		Random rnd = new Random();
+		int col = rnd.nextInt(6)+1;
+		int rot = rnd.nextInt(4);
+		
+		//losowanie figury
+		switch(rnd.nextInt(7))
+		{
+			case 0:
+				nfig = (new FigQuadra(tab, this, col, rot));
+				break;
+			case 1:
+				nfig = (new FigL(tab, this, col, rot));
+				break;
+			case 2:
+				nfig = (new FiginvL(tab, this, col, rot));
+				break;
+			case 3:
+				nfig = (new FigI(tab, this, col, rot));
+				break;
+			case 4:
+				nfig = (new FigZ(tab, this, col, rot));
+				break;
+			case 5:
+				nfig = (new FiginvZ(tab, this, col, rot));
+				break;
+			case 6:
+				nfig = (new FigT(tab, this, col, rot));
+				break;
+		}
+		return nfig;
+	}
+	
+	/**sekwencja czynnosci po upadku klocka*/
+	public void klocekUpadl(int h)
+	{
+		audio.down();
+		gs.add_score(h, false);
+		s.skanuj(this, h);
+		fig = newFig();
+	}
+	
+	/**sekwencja czynnosci po przegranej*/
+	public void GameOver()
+	{
+		run_flag=false;
+		gameover_flag=true;
+		repaint();
+		audio.stop_music();
+		audio.gameover();
+		gs.check_top();
+	}
+	
+	/**sekwencja czynnosci po starcie nowej gry*/
+	public void Start()
+	{
+		czyscTab();
+		
+		if(gameover_flag=true)
+		{
+			gs.del_score();
+			gameover_flag=false;
+		}
+		
+		fig = newFig();
+		run_flag=true;
+		audio.play_music();
+	}
+	
+	/**konstruktor glownej klasy programu - ramki*/
+	public GameFrame()
+	{
+		run_flag=false;
+		gameover_flag=false;
+		
+		add(new ImageComponent());
+		pack();
+		
+		tab = new int[10][20];
+		
+		gs = new GameState(this);
+		
+		Runnable r = new FigRunnable(this);
+		Thread t = new Thread(r);
+		t.start();
+		
+		s = new Skaner();
+		audio = new Audio();
+		
+		addKeyListener(this);//rejestracja listenera
+	}
+	
+	/**sterowanie - wcisniecie klawisza*/
+	@Override
+	public void keyPressed(KeyEvent evt)
+	{
+	    switch(evt.getKeyCode())
+	    {
+	    	case KeyEvent.VK_LEFT:
+	    		if(run_flag==true)
+	    			fig.MoveLeft(tab);
+	    		break;
+	    	case KeyEvent.VK_RIGHT:
+	    		if(run_flag==true)
+	    			fig.MoveRight(tab);
+	    		break;
+	    	case KeyEvent.VK_DOWN:
+	    		if(run_flag==true)
+	    			fig.MoveDown(tab);
+	    		break;
+	    	case KeyEvent.VK_UP:
+	    		if(run_flag==true)
+	    			fig.Rotate(tab);
+	    		break;
+	    	case KeyEvent.VK_ESCAPE:
+	    		System.exit(EXIT_ON_CLOSE);
+	    		break;
+	    	case KeyEvent.VK_ENTER:
+	    		if(run_flag==false)
+	    			Start();
+	    		break;
+	    }
+	}
+	
+	/**sterowanie - puszczenie klawisza - nieuzywane*/
+	@Override
+	public void keyReleased(KeyEvent evt){}
+	
+	/**sterowanie - wcisniecie znaku - nieuzywane*/
+	@Override
+	public void keyTyped(KeyEvent evt){}
+	
+	/**utworzenie ramki*/
+	public static void main(String[] args)
+	{
+		EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				GameFrame frame = new GameFrame();
+				frame.setTitle("Tetris by Michu4000");
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setLocationByPlatform(true);
+				frame.setResizable(false);
+				frame.setVisible(true);
+			}
+		});
+	}
+	
+	/**Komponent na ktorym wszystko jest malowane*/
+	class ImageComponent extends JComponent
+	{
+		/**szerokosc ekranu*/
+		private final int WIDTH = 480;
+		/**wysokosc ekranu*/
+		private final int HEIGHT = 640;
+		/**wielkosc klocka*/
+		private final int SIZE = 32;
+		
+		/**rysowanie komponentu*/
+		public void paintComponent(Graphics g)
+		{	
+			Graphics2D g2 = (Graphics2D) g;
+			
+			//tlo
+			g2.setColor(Color.BLACK);
+			g2.fill(new Rectangle2D.Double(0, 0, WIDTH+10, HEIGHT+10));
+			
+			//linie
+			g2.setColor(Color.DARK_GRAY);
+			for(int i=SIZE+5; i<HEIGHT; i+=SIZE)
+				g2.draw(new Line2D.Double(5+1,i,(2*WIDTH/3)+5-1,i));
+			for(int i=SIZE+5; i<2*WIDTH/3; i+=SIZE)
+				g2.draw(new Line2D.Double(i,5+1,i,HEIGHT+5-1));
+			
+			//klocki
+			for(int i=0; i<10; i++)
+				for(int j=0; j<20; j++)
+					if(tab[i][j]!=0)
+					{
+						switch(tab[i][j])
+						{
+							case 1:
+								g2.setColor(Color.GREEN.darker());
+								break;
+							case 2:
+								g2.setColor(Color.YELLOW.darker());
+								break;
+							case 3:
+								g2.setColor(Color.RED.darker());
+								break;
+							case 4:
+								g2.setColor(Color.BLUE.darker());
+								break;
+							case 5:
+								g2.setColor(Color.CYAN.darker());
+								break;
+							case 6:
+								g2.setColor(Color.MAGENTA.darker());
+								break;
+						}
+						
+						g2.fill(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
+						g2.setColor(g2.getColor().brighter());
+						g2.fill(new Rectangle2D.Double((i*SIZE)+5+SIZE/4, (j*SIZE)+5+SIZE/4, SIZE/2, SIZE/2));
+						g2.setColor(Color.DARK_GRAY);
+						g2.draw(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
+					}
+			
+			//obramowanie
+			g2.setColor(Color.WHITE);
+			g2.draw(new Rectangle2D.Double(5, 5, 2*WIDTH/3, HEIGHT));
+			
+			//podpis
+			g2.setFont(new Font("Century", Font.BOLD, 14));
+			g2.drawString("Michal Krysztofik", WIDTH-140, HEIGHT-10);
+			g2.drawString("I4Y9S1", WIDTH-140, HEIGHT+5);
+			
+			//top+score+lvl+lines
+			g2.setFont(new Font("Century", Font.BOLD, 24));
+			g2.drawString("TOP", WIDTH-97, 30);
+			g2.drawString(gs.get_top(), WIDTH-140, 55);
+			g2.drawString("SCORE", WIDTH-115, 100);
+			g2.drawString(gs.get_score(), WIDTH-140, 125);
+			g2.drawString("LEVEL", WIDTH-115, 170);
+			g2.drawString(gs.get_lvl(), WIDTH-78, 195);
+			g2.drawString("LINES", WIDTH-115, 240);
+			g2.drawString(gs.get_lines(), WIDTH-123, 265);
+			
+			//komunikat poczatkowy
+			if(run_flag==false)
+			{
+				g2.setColor(Color.BLACK);
+				g2.setFont(new Font("Century", Font.BOLD, 33));
+				g2.drawString("PRESS [ENTER] TO START", 10, (HEIGHT/2)-25);
+				g2.drawString("PRESS [ESC] TO EXIT", 10, (HEIGHT/2)+15);
+				g2.drawString("CONTROLS: ARROWS", 10, (HEIGHT/2)+55);
+				
+				g2.setColor(Color.GREEN);
+				g2.setFont(new Font("Century", Font.BOLD, 32));
+				g2.drawString("PRESS [ENTER] TO START", 10, (HEIGHT/2)-25);
+				g2.drawString("PRESS [ESC] TO EXIT", 10, (HEIGHT/2)+15);
+				g2.drawString("CONTROLS: ARROWS", 10, (HEIGHT/2)+55);
+			}
+			
+			//komunikat gameover
+			if(gameover_flag==true)
+			{
+				g2.setColor(Color.BLACK);
+				g2.setFont(new Font("Century", Font.BOLD, 73));
+				g2.drawString("GAME", 44, (HEIGHT/2)-150);
+				g2.drawString("OVER", 51, (HEIGHT/2)-100);
+				
+				g2.setColor(Color.RED);
+				g2.setFont(new Font("Century", Font.BOLD, 72));
+				g2.drawString("GAME", 44, (HEIGHT/2)-150);
+				g2.drawString("OVER", 51, (HEIGHT/2)-90);
+			}
+		}
+		
+		/**zwraca wymiary komponentu*/
+		public Dimension getPreferredSize()
+		{
+			return new Dimension(WIDTH, HEIGHT);
+		}
+	}
+}
