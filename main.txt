@@ -2,16 +2,13 @@ package placyk;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
 import java.util.Random;
 
 //Glowna klasa programu - ramka
 public class PFrame extends JFrame
 {
 
-	public Runnable r[];
+	public PRunnable r[];
 	public Thread t[];
 	
 	//konstruktor glownej klasy programu - ramki
