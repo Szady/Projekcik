@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
-
+//Ciastko z kremem
 /**Glowna klasa programu - ramka*/
 public class GameFrame extends JFrame implements KeyListener
 {
