@@ -100,7 +100,7 @@ public class PRunnable implements Runnable
 				x++;
 				break;
 			
-			case 3:
+			case 2:
 				y++;
 				break;
 			}
@@ -119,7 +119,7 @@ public class PRunnable implements Runnable
 				x++;
 				break;
 			
-			case 3:
+			case 2:
 				y--;
 				break;
 			}
@@ -138,7 +138,7 @@ public class PRunnable implements Runnable
 				y--;
 				break;
 			
-			case 3:
+			case 2:
 				x--;
 				break;
 			}
@@ -157,7 +157,7 @@ public class PRunnable implements Runnable
 				y--;
 				break;
 			
-			case 3:
+			case 2:
 				x++;
 				break;
 			}
@@ -269,12 +269,6 @@ public class PRunnable implements Runnable
 					break;
 			}
 			move();
-			
-			/*System.out.print("watek: ");
-			for(int i=0;i<20;i++)
-				if(collisions[i]==true)
-					System.out.print(i + " ");
-			System.out.println();*/
 			
 			frame.repaint();
 		}
