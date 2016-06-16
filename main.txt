@@ -1,23 +1,35 @@
 package placyk;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 import java.util.Random;
 
 //Glowna klasa programu - ramka
 public class PFrame extends JFrame
 {
 
+	public Runnable r[];
+	public Thread t[];
+	
 	//konstruktor glownej klasy programu - ramki
 	public PFrame()
 	{
 		add(new ImageComponent());
 		pack();
 		
-		Runnable r = new PRunnable(this);
-		Thread t = new Thread(r);
-		t.start();
+		r = new PRunnable[10];
+		t = new Thread[10];
+		Random rnd = new Random();
+		
+		for(int i=0;i<10;i++)
+		{
+			t[i] = new Thread(r[i]);
+			r[i] = new PRunnable(this,rnd.nextInt(400),rnd.nextInt(500));
+			t[i].start();
+		}
 	}
 	
 	//utworzenie ramki
@@ -44,8 +56,6 @@ public class PFrame extends JFrame
 		private final int WIDTH = 470;
 		//wysokosc ekranu
 		private final int HEIGHT = 630;
-		//wielkosc klocka
-		//private final int SIZE = 32;
 		
 		//rysowanie komponentu
 		public void paintComponent(Graphics g)
@@ -53,23 +63,28 @@ public class PFrame extends JFrame
 			Graphics2D g2 = (Graphics2D) g;
 			Image image = new ImageIcon("Placyk.png").getImage();
 			
-			//tlo
-			g2.setColor(Color.BLACK);
-			g2.fill(new Rectangle2D.Double(0, 0, WIDTH+10, HEIGHT+10));
-			
 			//obraz
 			g.drawImage(image, 0, 0, null);
 			
 			//podpis
+			g2.setColor(Color.BLACK);
 			g2.setFont(new Font("Century", Font.BOLD, 12));
 			g2.drawString("Michal Krysztofik", 20, HEIGHT+5);
 			g2.drawString("Pawel Kowalczyk", WIDTH-120, HEIGHT+5);
+			
+			//ludziki
+			int x=0;
+			int y=0;
+			
+			for(int i=0;i<10;i++)
+			{
+				x=r[i].getX();
+				y=r[i].getY();
+				g2.fill(new Ellipse2D.Double(x, y, 10, 10));
+			}
 		}
 		
 		//zwraca wymiary komponentu
-		public Dimension getPreferredSize()
-		{
-			return new Dimension(WIDTH, HEIGHT);
-		}
+		public Dimension getPreferredSize(){return new Dimension(WIDTH, HEIGHT);}
 	}
 }
