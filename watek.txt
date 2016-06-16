@@ -41,14 +41,28 @@ public class PRunnable implements Runnable
 		}
 		
 		if(x>cx)
-			x--;
-		else
-			x++;
+		{
+			if(rnd.nextInt(2)==1)
+				x--;
+		}
+		
+		if(x<cx)
+		{
+			if(rnd.nextInt(2)==1)
+				x++;
+		}
 		
 		if(y>cy)
-			y--;
-		else
-			y++;
+		{
+			if(rnd.nextInt(2)==1)
+				y--;
+		}
+		
+		if(y<cy)
+		{
+			if(rnd.nextInt(2)==1)
+				y++;
+		}
 	}
 	
 	@Override
