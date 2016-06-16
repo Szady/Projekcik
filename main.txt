@@ -27,6 +27,7 @@ public class PFrame extends JFrame
 			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50);
 			t[i] = new Thread(r[i]);
 			t[i].start();
+			t[i].setPriority(1);
 		}
 	}
 	
