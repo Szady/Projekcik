@@ -1,5 +1,6 @@
 package placyk;
 
+import java.awt.Color;
 import java.util.Random;
 
 //Nowy watek
@@ -8,16 +9,22 @@ public class PRunnable implements Runnable
 	private PFrame frame;
 	private int x=0;
 	private int y=0;
+	private Color k;
+	
+	private Random rnd = new Random();
 	
 	public int getX(){return x;}
 	
 	public int getY(){return y;}
+	
+	public Color getC(){return k;}
 
 	public PRunnable(PFrame frame, int x, int y)
 	{
 		this.frame = frame;
 		this.x = x;
 		this.y = y;
+		this.k = new Color(rnd.nextInt(256),rnd.nextInt(256),rnd.nextInt(256));
 	}
 	
 	private void move(int a, int b)
@@ -29,14 +36,12 @@ public class PRunnable implements Runnable
 	@Override
 	public void run()
 	{
-		Random rnd = new Random();
 		
 		while(true)
 		{
-			try{Thread.sleep(1000);}catch (InterruptedException e){}
-			move(rnd.nextInt(5),rnd.nextInt(5));
+			try{Thread.sleep(500);}catch (InterruptedException e){}
+			move(rnd.nextInt(10)-5,rnd.nextInt(10)-5);
 			frame.repaint();
-			System.out.println("watek move");
 		}
 	}
 }
