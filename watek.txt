@@ -1,5 +1,7 @@
 package placyk;
 
+import java.util.Random;
+
 //Nowy watek
 public class PRunnable implements Runnable
 {
@@ -7,15 +9,9 @@ public class PRunnable implements Runnable
 	private int x=0;
 	private int y=0;
 	
-	public int getX()
-	{
-		return x;
-	}
+	public int getX(){return x;}
 	
-	public int getY()
-	{
-		return y;
-	}
+	public int getY(){return y;}
 
 	public PRunnable(PFrame frame, int x, int y)
 	{
@@ -24,18 +20,23 @@ public class PRunnable implements Runnable
 		this.y = y;
 	}
 	
+	private void move(int a, int b)
+	{
+		x+=a;
+		y+=b;
+	}
+	
 	@Override
 	public void run()
 	{
+		Random rnd = new Random();
+		
 		while(true)
 		{
-			try
-			{
-				//czas uspienia - szybkosc gry (w zaleznosci od levelu)
-				Thread.sleep(500);
-			}
-			catch (InterruptedException e){}
-
+			try{Thread.sleep(1000);}catch (InterruptedException e){}
+			move(rnd.nextInt(5),rnd.nextInt(5));
+			frame.repaint();
+			System.out.println("watek move");
 		}
 	}
 }
