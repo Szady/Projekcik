@@ -41,72 +41,29 @@ public class PFrame extends JFrame
 	class ImageComponent extends JComponent
 	{
 		//szerokosc ekranu
-		private final int WIDTH = 480;
+		private final int WIDTH = 470;
 		//wysokosc ekranu
-		private final int HEIGHT = 640;
+		private final int HEIGHT = 630;
 		//wielkosc klocka
-		private final int SIZE = 32;
+		//private final int SIZE = 32;
 		
 		//rysowanie komponentu
 		public void paintComponent(Graphics g)
 		{	
 			Graphics2D g2 = (Graphics2D) g;
+			Image image = new ImageIcon("Placyk.png").getImage();
 			
 			//tlo
 			g2.setColor(Color.BLACK);
 			g2.fill(new Rectangle2D.Double(0, 0, WIDTH+10, HEIGHT+10));
 			
-			//linie
-			g2.setColor(Color.DARK_GRAY);
-			for(int i=SIZE+5; i<HEIGHT; i+=SIZE)
-				g2.draw(new Line2D.Double(5+1,i,(2*WIDTH/3)+5-1,i));
-			for(int i=SIZE+5; i<2*WIDTH/3; i+=SIZE)
-				g2.draw(new Line2D.Double(i,5+1,i,HEIGHT+5-1));
-			
-			int i = 0, j = 0;
-			
-			g2.fill(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
-			g2.setColor(g2.getColor().brighter());
-			g2.fill(new Rectangle2D.Double((i*SIZE)+5+SIZE/4, (j*SIZE)+5+SIZE/4, SIZE/2, SIZE/2));
-			g2.setColor(Color.DARK_GRAY);
-			g2.draw(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
-			
-			//obramowanie
-			g2.setColor(Color.WHITE);
-			g2.draw(new Rectangle2D.Double(5, 5, 2*WIDTH/3, HEIGHT));
+			//obraz
+			g.drawImage(image, 0, 0, null);
 			
 			//podpis
-			g2.setFont(new Font("Century", Font.BOLD, 14));
-			g2.drawString("Michal Krysztofik", WIDTH-140, HEIGHT-10);
-			g2.drawString("I4Y9S1", WIDTH-140, HEIGHT+5);
-			
-			//komunikat poczatkowy
-			{
-				g2.setColor(Color.BLACK);
-				g2.setFont(new Font("Century", Font.BOLD, 33));
-				g2.drawString("PRESS [ENTER] TO START", 10, (HEIGHT/2)-25);
-				g2.drawString("PRESS [ESC] TO EXIT", 10, (HEIGHT/2)+15);
-				g2.drawString("CONTROLS: ARROWS", 10, (HEIGHT/2)+55);
-				
-				g2.setColor(Color.GREEN);
-				g2.setFont(new Font("Century", Font.BOLD, 32));
-				g2.drawString("PRESS [ENTER] TO START", 10, (HEIGHT/2)-25);
-				g2.drawString("PRESS [ESC] TO EXIT", 10, (HEIGHT/2)+15);
-				g2.drawString("CONTROLS: ARROWS", 10, (HEIGHT/2)+55);
-			}
-			
-			//komunikat gameover
-			{
-				g2.setColor(Color.BLACK);
-				g2.setFont(new Font("Century", Font.BOLD, 73));
-				g2.drawString("GAME", 44, (HEIGHT/2)-150);
-				g2.drawString("OVER", 51, (HEIGHT/2)-100);
-				
-				g2.setColor(Color.RED);
-				g2.setFont(new Font("Century", Font.BOLD, 72));
-				g2.drawString("GAME", 44, (HEIGHT/2)-150);
-				g2.drawString("OVER", 51, (HEIGHT/2)-90);
-			}
+			g2.setFont(new Font("Century", Font.BOLD, 12));
+			g2.drawString("Michal Krysztofik", 20, HEIGHT+5);
+			g2.drawString("Pawel Kowalczyk", WIDTH-120, HEIGHT+5);
 		}
 		
 		//zwraca wymiary komponentu
