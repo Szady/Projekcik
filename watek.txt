@@ -1,4 +1,6 @@
-/**Nowy watek*/
+package placyk;
+
+//Nowy watek
 public class PRunnable implements Runnable
 {
 	PFrame frame;
@@ -16,11 +18,11 @@ public class PRunnable implements Runnable
 			try
 			{
 				//czas uspienia - szybkosc gry (w zaleznosci od levelu)
-				Thread.sleep( ... );
+				Thread.sleep(500);
 			}
 			catch (InterruptedException e){}
 			
-		...
+
 		}
 	}
 }
