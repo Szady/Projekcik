@@ -3,11 +3,25 @@ package placyk;
 //Nowy watek
 public class PRunnable implements Runnable
 {
-	PFrame frame;
+	private PFrame frame;
+	private int x=0;
+	private int y=0;
+	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
 
-	public PRunnable(PFrame frame)
+	public PRunnable(PFrame frame, int x, int y)
 	{
 		this.frame = frame;
+		this.x = x;
+		this.y = y;
 	}
 	
 	@Override
@@ -21,7 +35,6 @@ public class PRunnable implements Runnable
 				Thread.sleep(500);
 			}
 			catch (InterruptedException e){}
-			
 
 		}
 	}
