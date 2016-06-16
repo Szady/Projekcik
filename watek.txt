@@ -1,17 +1,18 @@
 package placyk;
-
 import java.awt.Color;
 import java.util.Random;
 
 public class PRunnable implements Runnable
 {
 	private PFrame frame;
-	private int x;
-	private int y;
 	private Color k;
 	
+	private int x;
+	private int y;
+	private int tempo;
 	private int cx;
 	private int cy;
+	private boolean[] collisions;
 	
 	private Random rnd = new Random();
 	
@@ -20,6 +21,10 @@ public class PRunnable implements Runnable
 	public int getY(){return y;}
 	
 	public Color getC(){return k;}
+	
+	public void setCollision(int i){collisions[i]=true;}
+	
+	public void clearCollision(int i){collisions[i]=false;}
 
 	public PRunnable(PFrame frame, int x, int y)
 	{
@@ -27,40 +32,45 @@ public class PRunnable implements Runnable
 		this.x = x;
 		this.y = y;
 		this.k = new Color(rnd.nextInt(256),rnd.nextInt(256),rnd.nextInt(256));
-		
+		this.tempo = rnd.nextInt(80)+20;
 		this.cx = x;
 		this.cy = y;
+		this.collisions = new boolean[20];
+		
+		for(int i=0;i<20;i++)
+			collisions[i]=false;
 	}
 	
 	private void move()
 	{
 		if(x==cx && y==cy)
 		{
-			cx=rnd.nextInt(400)+30;
-			cy=rnd.nextInt(500)+40;
+			cx=rnd.nextInt(390)+40;
+			cy=rnd.nextInt(520)+50;
+			tempo = rnd.nextInt(80)+20;
 		}
 		
 		if(x>cx)
 		{
-			if(rnd.nextInt(2)==1)
+			if(rnd.nextBoolean()==true)
 				x--;
 		}
 		
 		if(x<cx)
 		{
-			if(rnd.nextInt(2)==1)
+			if(rnd.nextBoolean()==true)
 				x++;
 		}
 		
 		if(y>cy)
 		{
-			if(rnd.nextInt(2)==1)
+			if(rnd.nextBoolean()==true)
 				y--;
 		}
 		
 		if(y<cy)
 		{
-			if(rnd.nextInt(2)==1)
+			if(rnd.nextBoolean()==true)
 				y++;
 		}
 	}
@@ -68,11 +78,17 @@ public class PRunnable implements Runnable
 	@Override
 	public void run()
 	{
-		
 		while(true)
 		{
-			try{Thread.sleep(75);}catch (InterruptedException e){}
+			try{Thread.sleep(tempo);}catch (InterruptedException e){}
 			move();
+			
+			System.out.print("watek: ");
+			for(int i=0;i<20;i++)
+				if(collisions[i]==true)
+					System.out.print(i + " ");
+			System.out.println();
+			
 			frame.repaint();
 		}
 	}
