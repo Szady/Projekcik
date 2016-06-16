@@ -1,49 +1,34 @@
-package tetris;
+package placyk;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
-/**Glowna klasa programu - ramka*/
-public class PFrame extends JFrame implements KeyListener
+//Glowna klasa programu - ramka
+public class PFrame extends JFrame
 {
-	
-	/**zwraca nowa figure*/
-	public Fig newFig()
-	{
 
-		//losowanie
-		Random rnd = new Random();
-		int col = rnd.nextInt(6)+1;
-		int rot = rnd.nextInt(4);
-		
-		switch(rnd.nextInt(7))
-		{
-
-		}
-
-	}
-	
-	/**konstruktor glownej klasy programu - ramki*/
-	public GameFrame()
+	//konstruktor glownej klasy programu - ramki
+	public PFrame()
 	{
 		add(new ImageComponent());
 		pack();
 		
-		Runnable r = new FigRunnable(this);
+		Runnable r = new PRunnable(this);
 		Thread t = new Thread(r);
 		t.start();
+	}
 	
-	/**utworzenie ramki*/
+	//utworzenie ramki
 	public static void main(String[] args)
 	{
 		EventQueue.invokeLater(new Runnable()
 		{
 			public void run()
 			{
-				GameFrame frame = new GameFrame();
-				frame.setTitle("Tetris by Michu4000");
+				PFrame frame = new PFrame();
+				frame.setTitle("Placyk by Szady & Michu4000");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setLocationByPlatform(true);
 				frame.setResizable(false);
@@ -52,17 +37,17 @@ public class PFrame extends JFrame implements KeyListener
 		});
 	}
 	
-	/**Komponent na ktorym wszystko jest malowane*/
+	//Komponent na ktorym wszystko jest malowane
 	class ImageComponent extends JComponent
 	{
-		/**szerokosc ekranu*/
+		//szerokosc ekranu
 		private final int WIDTH = 480;
-		/**wysokosc ekranu*/
+		//wysokosc ekranu
 		private final int HEIGHT = 640;
-		/**wielkosc klocka*/
+		//wielkosc klocka
 		private final int SIZE = 32;
 		
-		/**rysowanie komponentu*/
+		//rysowanie komponentu
 		public void paintComponent(Graphics g)
 		{	
 			Graphics2D g2 = (Graphics2D) g;
@@ -78,39 +63,13 @@ public class PFrame extends JFrame implements KeyListener
 			for(int i=SIZE+5; i<2*WIDTH/3; i+=SIZE)
 				g2.draw(new Line2D.Double(i,5+1,i,HEIGHT+5-1));
 			
-			//klocki
-			for(int i=0; i<10; i++)
-				for(int j=0; j<20; j++)
-					if(tab[i][j]!=0)
-					{
-						switch(tab[i][j])
-						{
-							case 1:
-								g2.setColor(Color.GREEN.darker());
-								break;
-							case 2:
-								g2.setColor(Color.YELLOW.darker());
-								break;
-							case 3:
-								g2.setColor(Color.RED.darker());
-								break;
-							case 4:
-								g2.setColor(Color.BLUE.darker());
-								break;
-							case 5:
-								g2.setColor(Color.CYAN.darker());
-								break;
-							case 6:
-								g2.setColor(Color.MAGENTA.darker());
-								break;
-						}
-						
-						g2.fill(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
-						g2.setColor(g2.getColor().brighter());
-						g2.fill(new Rectangle2D.Double((i*SIZE)+5+SIZE/4, (j*SIZE)+5+SIZE/4, SIZE/2, SIZE/2));
-						g2.setColor(Color.DARK_GRAY);
-						g2.draw(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
-					}
+			int i = 0, j = 0;
+			
+			g2.fill(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
+			g2.setColor(g2.getColor().brighter());
+			g2.fill(new Rectangle2D.Double((i*SIZE)+5+SIZE/4, (j*SIZE)+5+SIZE/4, SIZE/2, SIZE/2));
+			g2.setColor(Color.DARK_GRAY);
+			g2.draw(new Rectangle2D.Double((i*SIZE)+5, (j*SIZE)+5, SIZE, SIZE));
 			
 			//obramowanie
 			g2.setColor(Color.WHITE);
@@ -121,19 +80,7 @@ public class PFrame extends JFrame implements KeyListener
 			g2.drawString("Michal Krysztofik", WIDTH-140, HEIGHT-10);
 			g2.drawString("I4Y9S1", WIDTH-140, HEIGHT+5);
 			
-			//top+score+lvl+lines
-			g2.setFont(new Font("Century", Font.BOLD, 24));
-			g2.drawString("TOP", WIDTH-97, 30);
-			g2.drawString(gs.get_top(), WIDTH-140, 55);
-			g2.drawString("SCORE", WIDTH-115, 100);
-			g2.drawString(gs.get_score(), WIDTH-140, 125);
-			g2.drawString("LEVEL", WIDTH-115, 170);
-			g2.drawString(gs.get_lvl(), WIDTH-78, 195);
-			g2.drawString("LINES", WIDTH-115, 240);
-			g2.drawString(gs.get_lines(), WIDTH-123, 265);
-			
 			//komunikat poczatkowy
-			if(run_flag==false)
 			{
 				g2.setColor(Color.BLACK);
 				g2.setFont(new Font("Century", Font.BOLD, 33));
@@ -149,7 +96,6 @@ public class PFrame extends JFrame implements KeyListener
 			}
 			
 			//komunikat gameover
-			if(gameover_flag==true)
 			{
 				g2.setColor(Color.BLACK);
 				g2.setFont(new Font("Century", Font.BOLD, 73));
@@ -163,7 +109,7 @@ public class PFrame extends JFrame implements KeyListener
 			}
 		}
 		
-		/**zwraca wymiary komponentu*/
+		//zwraca wymiary komponentu
 		public Dimension getPreferredSize()
 		{
 			return new Dimension(WIDTH, HEIGHT);
