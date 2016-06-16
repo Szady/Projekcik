@@ -26,6 +26,203 @@ public class PRunnable implements Runnable
 	
 	public void clearCollision(int i){collisions[i]=false;}
 
+	private boolean handleCollisions()
+	{
+		boolean l=false, p=false, g=false, d=false;
+		
+		for(int i=0;i<20;i++)
+			if(collisions[i]==true)
+			{
+				if( x == (frame.r[i].getX()+1) )
+					l=true;
+				
+				if( x == (frame.r[i].getX()-1) )
+					p=true;
+				
+				if( y == (frame.r[i].getX()+1) )
+					d=true;
+				
+				if( y == (frame.r[i].getX()-1) )
+					g=true;
+			}
+		
+		if(l==false && p==true && g==true && d==true)//w lewo
+		{
+			x--;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}
+			
+		if(l==true && p==false && g==true && d==true)//w prawo
+		{
+			x++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+				
+		if(l==true && p==true && g==false && d==true)//w gore
+		{
+			y++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==true && p==true && g==true && d==false)//w dol
+		{
+			y--;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==false && p==false && g==true && d==true)//w lewo albo prawo
+		{
+			if(rnd.nextBoolean()==true)
+				x--;
+			else
+				x++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==true && p==true && g==false && d==false)//w gore lub w dol
+		{
+			if(rnd.nextBoolean()==true)
+				y--;
+			else
+				y++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==false && p==false && g==false && d==true)//w lewo albo prawo lub w gore
+		{
+			switch(rnd.nextInt(3))
+			{
+			case 0:
+				x--;
+				break;
+			
+			case 1:
+				x++;
+				break;
+			
+			case 3:
+				y++;
+				break;
+			}
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==false && p==false && g==true && d==false)//w lewo albo prawo lub w dol
+		{
+			switch(rnd.nextInt(3))
+			{
+			case 0:
+				x--;
+				break;
+			
+			case 1:
+				x++;
+				break;
+			
+			case 3:
+				y--;
+				break;
+			}
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+				
+		if(l==false && p==true && g==false && d==false)//w gore lub w dol lub w lewo
+		{
+			switch(rnd.nextInt(3))
+			{
+			case 0:
+				y++;
+				break;
+			
+			case 1:
+				y--;
+				break;
+			
+			case 3:
+				x--;
+				break;
+			}
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+		
+		if(l==true && p==false && g==false && d==false)//w gore lub w dol lub w prawo
+		{
+			switch(rnd.nextInt(3))
+			{
+			case 0:
+				y++;
+				break;
+			
+			case 1:
+				y--;
+				break;
+			
+			case 3:
+				x++;
+				break;
+			}
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+		
+		if(l==true && p==true && g==true && d==true)//nigdzie
+		{
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==true && p==false && g==true && d==false)//w prawo lub w dol
+		{
+			if(rnd.nextBoolean()==true)
+				x++;
+			else
+				y--;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+		
+		if(l==true && p==false && g==true && d==false)//w lewo lub w gore
+		{
+			if(rnd.nextBoolean()==true)
+				x--;
+			else
+				y++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==false && p==true && g==true && d==false)//w lewo lub w dol
+		{
+			if(rnd.nextBoolean()==true)
+				x--;
+			else
+				y--;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}	
+			
+		if(l==true && p==false && g==false && d==true)//w prawo lub w gore
+		{
+			if(rnd.nextBoolean()==true)
+				y++;
+			else
+				x++;
+			try{Thread.sleep(20);}catch (InterruptedException e){}
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public PRunnable(PFrame frame, int x, int y)
 	{
 		this.frame = frame;
@@ -81,13 +278,18 @@ public class PRunnable implements Runnable
 		while(true)
 		{
 			try{Thread.sleep(tempo);}catch (InterruptedException e){}
+			while(true)
+			{
+				if(handleCollisions()==true)
+					break;
+			}
 			move();
 			
-			System.out.print("watek: ");
+			/*System.out.print("watek: ");
 			for(int i=0;i<20;i++)
 				if(collisions[i]==true)
 					System.out.print(i + " ");
-			System.out.println();
+			System.out.println();*/
 			
 			frame.repaint();
 		}
