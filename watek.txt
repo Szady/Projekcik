@@ -272,6 +272,12 @@ public class PRunnable implements Runnable
 			{
 				if(handleCollisions()==true)
 					break;
+				else
+				{
+					cx=rnd.nextInt(390)+40;
+					cy=rnd.nextInt(520)+50;
+					tempo = rnd.nextInt(80)+20;
+				}	
 			}
 			move();
 			
