@@ -6,13 +6,18 @@ public class PRunnable implements Runnable
 {
 	private PFrame frame;
 	private Color k;
+	private int size;
+	private int n;
 	
 	private int x;
 	private int y;
 	private int tempo;
+	//wsp celu
 	private int cx;
 	private int cy;
+	
 	private boolean[] collisions;
+	private int specialCollision;
 	
 	private Random rnd = new Random();
 	
@@ -22,30 +27,132 @@ public class PRunnable implements Runnable
 	
 	public Color getC(){return k;}
 	
+	public PRunnable(PFrame frame, int x, int y, int size, int n)
+	{
+		this.frame = frame;
+		this.size = size;
+		this.n = n;
+		this.x = x;
+		this.y = y;
+		this.k = new Color(rnd.nextInt(256),rnd.nextInt(256),rnd.nextInt(256));
+		this.tempo = rnd.nextInt(80)+20;
+		this.cx = x;
+		this.cy = y;
+		this.collisions = new boolean[20];
+		this.specialCollision=0;
+		
+		for(int i=0;i<20;i++)
+			collisions[i]=false;
+	}
+	
 	public void setCollision(int i){collisions[i]=true;}
 	
 	public void clearCollision(int i){collisions[i]=false;}
+	
+	public void setSpecialCollision(int i){specialCollision=i;}
+	
+	public void clearSpecialCollision(){specialCollision=0;}
 
 	private boolean handleCollisions()
 	{
 		boolean l=false, p=false, g=false, d=false;
 		
-		for(int i=0;i<20;i++)
+		for(int i=0;i<n;i++)
 			if(collisions[i]==true)
 			{
-				if( (x - frame.r[i].getX() ) > 0 && (x - frame.r[i].getX() ) <= 17 )
+				if( (x - frame.r[i].getX() ) > 0 && (x - frame.r[i].getX() ) <= size )
 					l=true;
 				
-				if( (frame.r[i].getX() - x) > 0 && (frame.r[i].getX() - x) <= 17 )
+				if( (frame.r[i].getX() - x) > 0 && (frame.r[i].getX() - x) <= size )
 					p=true;
 				
-				if( (y - frame.r[i].getY() ) > 0 && (y - frame.r[i].getY() ) <= 17 )
+				if( (y - frame.r[i].getY() ) > 0 && (y - frame.r[i].getY() ) <= size )
 					d=true;
 				
-				if( (frame.r[i].getY() - y) > 0 && (frame.r[i].getY() - y) <= 17 )
+				if( (frame.r[i].getY() - y) > 0 && (frame.r[i].getY() - y) <= size )
 					g=true;
 			}
 		
+		return avoidCollision(l,p,g,d);
+	}
+		
+	//karuzela = (70, 450); 85x85
+	//hustawka = (300, 150); 85x142
+	//zjezdzalnia = (305,449); 118x83
+	//lawka = (281,78); 24x68
+	private boolean handleSpecialCollision()
+	{
+		if(specialCollision==0) return true;
+		else
+		{
+			boolean l=false, p=false, g=false, d=false;
+			
+			switch(specialCollision)
+			{
+			case 1:
+				if(x+size/2>=70 && x<(70+85)/2)
+					l=true;
+				
+				if(x-size/2<=70+85 && x>(70+85)/2)
+					p=true;
+
+				if(y+size/2>=450 && y>(450+85)/2)
+					d=true;
+				
+				if(y-size/2<=450+85 && y<(450+85)/2)
+					g=true;
+				break;
+			
+			case 2:
+				if(x+size/2>=300 && x<(300+85)/2)
+					l=true;
+				
+				if(x-size/2<=300+85 && x>(300+85)/2)
+					p=true;
+
+				if(y+size/2>=150 && y>(150+142)/2)
+					d=true;
+				
+				if(y-size/2<=150+142 && y<(150+142)/2)
+					g=true;
+				break;
+				
+			case 3:
+				if(x+size/2>=305 && x<(305+118)/2)
+					l=true;
+				
+				if(x-size/2<=305+118 && x>(305+118)/2)
+					p=true;
+
+				if(y+size/2>=449 && y>(449+83)/2)
+					d=true;
+				
+				if(y-size/2<=449+83 && y<(449+83)/2)
+					g=true;
+				break;
+				
+			case 4:
+				if(x+size/2>=281 && x<(281+24)/2)
+					l=true;
+				
+				if(x-size/2<=281+24 && x>(281+24)/2)
+					p=true;
+
+				if(y+size/2>=78 && y>(78+68)/2)
+					d=true;
+				
+				if(y-size/2<=78+68 && y<(78+68)/2)
+					g=true;
+				break;
+			}
+			System.out.println("kolizja " + this.hashCode() + ": " + l + " " + p + " " + g + " " + d);//
+			return avoidCollision(l,p,g,d);
+		}
+	}
+	
+	private boolean avoidCollision(boolean l, boolean p, boolean g, boolean d)
+	{
+
 		if(l==false && p==false && g==false && d==false)//brak
 		{
 			return true;
@@ -213,21 +320,6 @@ public class PRunnable implements Runnable
 		return true;
 	}
 	
-	public PRunnable(PFrame frame, int x, int y)
-	{
-		this.frame = frame;
-		this.x = x;
-		this.y = y;
-		this.k = new Color(rnd.nextInt(256),rnd.nextInt(256),rnd.nextInt(256));
-		this.tempo = rnd.nextInt(80)+20;
-		this.cx = x;
-		this.cy = y;
-		this.collisions = new boolean[20];
-		
-		for(int i=0;i<20;i++)
-			collisions[i]=false;
-	}
-	
 	private void move()
 	{
 		if(x==cx && y==cy)
@@ -270,7 +362,7 @@ public class PRunnable implements Runnable
 			try{Thread.sleep(tempo);}catch (InterruptedException e){}
 			while(true)
 			{
-				if(handleCollisions()==true)
+				if(handleCollisions()==true && handleSpecialCollision()==true)
 					break;
 				else
 				{
