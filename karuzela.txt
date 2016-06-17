@@ -16,7 +16,7 @@ public class Karuzela extends Thread
 		while(true)
 		{
 			klatka++;
-			klatka = klatka%4;
+			klatka = klatka%9;
 			frame.repaint();
 			try{Thread.sleep(100);}catch (InterruptedException e){}
 		}
