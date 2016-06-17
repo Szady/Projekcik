@@ -9,6 +9,8 @@ public class PFrame extends JFrame
 {
 	public PRunnable r[];
 	public Thread t[];
+	public Karuzela k;
+	public Hustawka h;
 	public int size;
 	
 	//konstruktor glownej klasy programu - ramki
@@ -19,7 +21,7 @@ public class PFrame extends JFrame
 		
 		size = 17;
 		r = new PRunnable[20];
-		t = new Thread[20];
+		t = new Thread[21];
 		Random rnd = new Random();
 		
 		for(int i=0;i<20;i++)
@@ -29,6 +31,11 @@ public class PFrame extends JFrame
 			t[i].start();
 			t[i].setPriority(1);
 		}
+		
+		k = new Karuzela(this);
+		h = new Hustawka(this);
+		k.start();
+		h.start();
 	}
 	
 	//utworzenie ramki
@@ -74,20 +81,43 @@ public class PFrame extends JFrame
 		//wysokosc ekranu
 		private final int HEIGHT = 630;
 		
+		Graphics2D g2;
+		Image image;
+		Image[] karuzela;
+		Image[] hustawka;
+		
+		public ImageComponent()
+		{
+			image = new ImageIcon("Placyk.png").getImage();
+			
+			karuzela = new Image[4];
+			karuzela[0] = new ImageIcon("Carousel1.png").getImage();
+			karuzela[1] = new ImageIcon("Carousel2.png").getImage();
+			karuzela[2] = new ImageIcon("Carousel3.png").getImage();
+			karuzela[3] = new ImageIcon("Carousel4.png").getImage();
+			
+			hustawka = new Image[3];
+			hustawka[0] = new ImageIcon("Swing1.png").getImage();
+			hustawka[1] = new ImageIcon("Swing2.png").getImage();
+			hustawka[2] = new ImageIcon("Swing3.png").getImage();
+		}
+		
 		//rysowanie komponentu
 		public void paintComponent(Graphics g)
 		{	
-			Graphics2D g2 = (Graphics2D) g;
-			Image image = new ImageIcon("Placyk.png").getImage();
+			g2 = (Graphics2D) g;
 			
 			//obraz
 			g2.drawImage(image, 0, 0, null);
 			
+			g2.drawImage(karuzela[k.getKlatka()], 70, 450, null);
+			g2.drawImage(hustawka[h.getKlatka()], 300, 150, null);
+			
 			//podpis
 			g2.setColor(Color.BLACK);
 			g2.setFont(new Font("Century", Font.BOLD, 12));
-			g2.drawString("Michal Krysztofik", 20, HEIGHT+5);
-			g2.drawString("Pawel Kowalczyk", WIDTH-120, HEIGHT+5);
+			g2.drawString("Michał Krysztofik", 20, HEIGHT+5);
+			g2.drawString("Paweł Kowalczyk", WIDTH-120, HEIGHT+5);
 			
 			//ludziki
 			for(int i=0;i<20;i++)
