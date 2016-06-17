@@ -9,9 +9,11 @@ public class PFrame extends JFrame
 {
 	public PRunnable r[];
 	public Thread t[];
+	public Collisions c;
 	public Karuzela k;
 	public Hustawka h;
 	public int size;
+	public int n;
 	
 	//konstruktor glownej klasy programu - ramki
 	public PFrame()
@@ -19,14 +21,15 @@ public class PFrame extends JFrame
 		add(new ImageComponent());
 		pack();
 		
-		size = 17;
-		r = new PRunnable[20];
-		t = new Thread[21];
+		size = 17;	//wielkosc ludzika
+		n = 10;	//ilosc ludzikow
+		r = new PRunnable[n];
+		t = new Thread[n];
 		Random rnd = new Random();
 		
-		for(int i=0;i<20;i++)
+		for(int i=0;i<n;i++)
 		{
-			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50);
+			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50,size,n);
 			t[i] = new Thread(r[i]);
 			t[i].start();
 			t[i].setPriority(1);
@@ -34,8 +37,11 @@ public class PFrame extends JFrame
 		
 		k = new Karuzela(this);
 		h = new Hustawka(this);
+		c = new Collisions(r,size,n);
+		c.setPriority(10);
 		k.start();
 		h.start();
+		c.start();
 	}
 	
 	//utworzenie ramki
@@ -55,24 +61,6 @@ public class PFrame extends JFrame
 		});
 	}
 	
-	private void checkCollisions()
-	{
-		for(int i=0;i<20;i++)
-			for(int j=i+1;j<20;j++)
-			{
-				if( Math.abs(r[i].getX() - r[j].getX() )<=size && Math.abs(r[i].getY() - r[j].getY() )<=size )
-				{
-					r[i].setCollision(j);
-					r[j].setCollision(i);
-				}
-				else
-				{
-					r[i].clearCollision(j);
-					r[j].clearCollision(i);
-				}
-			}
-	}
-	
 	//Komponent na ktorym wszystko jest malowane
 	class ImageComponent extends JComponent
 	{
@@ -90,16 +78,39 @@ public class PFrame extends JFrame
 		{
 			image = new ImageIcon("Placyk.png").getImage();
 			
-			karuzela = new Image[4];
+			karuzela = new Image[9];
 			karuzela[0] = new ImageIcon("Carousel1.png").getImage();
 			karuzela[1] = new ImageIcon("Carousel2.png").getImage();
 			karuzela[2] = new ImageIcon("Carousel3.png").getImage();
 			karuzela[3] = new ImageIcon("Carousel4.png").getImage();
+			karuzela[4] = new ImageIcon("Carousel5.png").getImage();
+			karuzela[5] = new ImageIcon("Carousel6.png").getImage();
+			karuzela[6] = new ImageIcon("Carousel7.png").getImage();
+			karuzela[7] = new ImageIcon("Carousel8.png").getImage();
+			karuzela[8] = new ImageIcon("Carousel9.png").getImage();
 			
-			hustawka = new Image[3];
+			hustawka = new Image[21];
 			hustawka[0] = new ImageIcon("Swing1.png").getImage();
 			hustawka[1] = new ImageIcon("Swing2.png").getImage();
 			hustawka[2] = new ImageIcon("Swing3.png").getImage();
+			hustawka[3] = new ImageIcon("Swing4.png").getImage();
+			hustawka[4] = new ImageIcon("Swing5.png").getImage();
+			hustawka[5] = new ImageIcon("Swing6.png").getImage();
+			hustawka[6] = new ImageIcon("Swing7.png").getImage();
+			hustawka[7] = new ImageIcon("Swing8.png").getImage();
+			hustawka[8] = new ImageIcon("Swing9.png").getImage();
+			hustawka[9] = new ImageIcon("Swing10.png").getImage();
+			hustawka[10] = new ImageIcon("Swing11.png").getImage();
+			hustawka[11] = new ImageIcon("Swing12.png").getImage();
+			hustawka[12] = new ImageIcon("Swing13.png").getImage();
+			hustawka[13] = new ImageIcon("Swing14.png").getImage();
+			hustawka[14] = new ImageIcon("Swing15.png").getImage();
+			hustawka[15] = new ImageIcon("Swing16.png").getImage();
+			hustawka[16] = new ImageIcon("Swing17.png").getImage();
+			hustawka[17] = new ImageIcon("Swing18.png").getImage();
+			hustawka[18] = new ImageIcon("Swing19.png").getImage();
+			hustawka[19] = new ImageIcon("Swing20.png").getImage();
+			hustawka[20] = new ImageIcon("Swing21.png").getImage();
 		}
 		
 		//rysowanie komponentu
@@ -120,7 +131,7 @@ public class PFrame extends JFrame
 			g2.drawString("Paweł Kowalczyk", WIDTH-120, HEIGHT+5);
 			
 			//ludziki
-			for(int i=0;i<20;i++)
+			for(int i=0;i<n;i++)
 			{
 				g2.setColor(Color.BLACK);
 				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), size, size));
@@ -128,8 +139,6 @@ public class PFrame extends JFrame
 				g2.setColor(r[i].getC());
 				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), size-2, size-2));
 			}
-			
-			checkCollisions();
 		}
 		
 		//zwraca wymiary komponentu
