@@ -1,0 +1,29 @@
+package placyk;
+
+public class Hustawka extends Thread
+{
+	private int klatka;
+	private PFrame frame;
+	
+	public Hustawka(PFrame frame)
+	{
+		this.frame = frame;
+		klatka=0;
+	}
+	
+	public void run()
+	{
+		while(true)
+		{
+			klatka++;
+			klatka = klatka%3;
+			frame.repaint();
+			try{Thread.sleep(250);}catch (InterruptedException e){}
+		}
+	}
+	
+	public int getKlatka()
+	{
+		return klatka;
+	}
+}
