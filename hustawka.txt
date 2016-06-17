@@ -16,7 +16,7 @@ public class Hustawka extends Thread
 		while(true)
 		{
 			klatka++;
-			klatka = klatka%3;
+			klatka = klatka%21;
 			frame.repaint();
 			try{Thread.sleep(250);}catch (InterruptedException e){}
 		}
