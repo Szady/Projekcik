@@ -1,0 +1,29 @@
+package placyk;
+
+public class Karuzela extends Thread
+{
+	private int klatka;
+	private PFrame frame;
+	
+	public Karuzela(PFrame frame)
+	{
+		this.frame = frame;
+		klatka=0;
+	}
+	
+	public void run()
+	{
+		while(true)
+		{
+			klatka++;
+			klatka = klatka%4;
+			frame.repaint();
+			try{Thread.sleep(100);}catch (InterruptedException e){}
+		}
+	}
+	
+	public int getKlatka()
+	{
+		return klatka;
+	}
+}
