@@ -1,0 +1,78 @@
+package placyk;
+
+public class Collisions extends Thread
+{
+	private PRunnable[] r;
+	private int size;
+	private int n;
+	
+	public Collisions(PRunnable[] r, int size, int n)
+	{
+		this.r=r;
+		this.size=size;
+		this.n=n;
+	}
+	
+	private void checkCollisions()
+	{
+		for(int i=0;i<n;i++)
+			for(int j=i+1;j<n;j++)
+			{
+				if( Math.abs(r[i].getX() - r[j].getX() )<=size && Math.abs(r[i].getY() - r[j].getY() )<=size )
+				{
+					r[i].setCollision(j);
+					r[j].setCollision(i);
+				}
+				else
+				{
+					r[i].clearCollision(j);
+					r[j].clearCollision(i);
+				}
+			}
+	}
+	
+	//karuzela = (70, 450); 85x85
+	//hustawka = (300, 150); 85x142
+	//zjezdzalnia = (305,449); 118x83
+	//lawka = (281,78); 24x68
+	private void checkSpecialCollisions()
+	{
+		for(int i=0;i<n;i++)
+		{
+			if(r[i].getX()+size/2>=70 && r[i].getX()-size/2<=70+85 && r[i].getY()+size/2>=450 && r[i].getY()-size/2<=450+85)
+			{
+				r[i].setSpecialCollision(1);
+				return;
+			}
+			
+			if(r[i].getX()+size/2>=300 && r[i].getX()-size/2<=300+85 && r[i].getY()+size/2>=150 && r[i].getY()-size/2<=150+142)
+			{
+				r[i].setSpecialCollision(2);
+				return;
+			}
+			
+			if(r[i].getX()+size/2>=305 && r[i].getX()-size/2<=305+118 && r[i].getY()+size/2>=449 && r[i].getY()-size/2<=449+83)
+			{
+				r[i].setSpecialCollision(3);
+				return;
+			}
+			
+			if(r[i].getX()+size/2>=281 && r[i].getX()-size/2<=281+24 && r[i].getY()+size/2>=378 && r[i].getY()-size/2<=378+68)
+			{
+				r[i].setSpecialCollision(4);
+				return;
+			}
+			
+			r[i].clearSpecialCollision();
+		}
+	}
+	
+	public void run()
+	{
+		while(true)
+		{
+			checkCollisions();
+			checkSpecialCollisions();
+		}
+	}
+}
