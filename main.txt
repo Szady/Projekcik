@@ -26,12 +26,11 @@ public class PFrame extends JFrame
 		r = new PRunnable[n];
 		t = new Thread[n];
 		Random rnd = new Random();
-		
+
 		for(int i=0;i<n;i++)
 		{
 			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50,size,n);
 			t[i] = new Thread(r[i]);
-			t[i].start();
 			t[i].setPriority(1);
 		}
 		
@@ -42,6 +41,9 @@ public class PFrame extends JFrame
 		k.start();
 		h.start();
 		c.start();
+		
+		for(int i=0;i<n;i++)
+			t[i].start();
 	}
 	
 	//utworzenie ramki
@@ -139,6 +141,17 @@ public class PFrame extends JFrame
 				g2.setColor(r[i].getC());
 				g2.fill(new Ellipse2D.Double(r[i].getX(), r[i].getY(), size-2, size-2));
 			}
+			
+			//kolizje
+			//karuzela = (70, 450); 85x85
+			//hustawka = (300, 150); 85x142
+			//zjezdzalnia = (305,449); 118x93
+			//lawka = (281,355); 24x90
+			g2.setColor(Color.RED);
+			g2.drawRect(70, 450, 85, 85);
+			g2.drawRect(300, 150, 85, 142);
+			g2.drawRect(305, 449, 118, 93);
+			g2.drawRect(281, 355, 24, 90);
 		}
 		
 		//zwraca wymiary komponentu
