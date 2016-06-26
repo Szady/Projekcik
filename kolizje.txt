@@ -1,5 +1,7 @@
 package placyk;
 
+import java.awt.Color;
+
 public class Collisions extends Thread
 {
 	private PRunnable[] r;
@@ -18,7 +20,7 @@ public class Collisions extends Thread
 		for(int i=0;i<n;i++)
 			for(int j=i+1;j<n;j++)
 			{
-				if( Math.abs(r[i].getX() - r[j].getX() )<=size && Math.abs(r[i].getY() - r[j].getY() )<=size )
+				if( Math.abs(r[i].getX() - r[j].getX() ) <= size && Math.abs(r[i].getY() - r[j].getY() ) <= size )
 				{
 					r[i].setCollision(j);
 					r[j].setCollision(i);
@@ -33,37 +35,46 @@ public class Collisions extends Thread
 	
 	//karuzela = (70, 450); 85x85
 	//hustawka = (300, 150); 85x142
-	//zjezdzalnia = (305,449); 118x83
-	//lawka = (281,78); 24x68
+	//zjezdzalnia = (305,449); 118x93
+	//lawka = (281,355); 24x90
 	private void checkSpecialCollisions()
 	{
 		for(int i=0;i<n;i++)
 		{
-			if(r[i].getX()+size/2>=70 && r[i].getX()-size/2<=70+85 && r[i].getY()+size/2>=450 && r[i].getY()-size/2<=450+85)
+			if( (r[i].getX()+size ) >= 70 && ( r[i].getX()-size ) <= (70+85) && ( r[i].getY()+size ) >= 450 && ( r[i].getY()-size ) <= (450+85) )
 			{
 				r[i].setSpecialCollision(1);
+				//System.out.println("karuzela");//
+				r[i].k=Color.RED;//
 				return;
 			}
 			
-			if(r[i].getX()+size/2>=300 && r[i].getX()-size/2<=300+85 && r[i].getY()+size/2>=150 && r[i].getY()-size/2<=150+142)
+			if( ( r[i].getX()+size ) >= 300 && ( r[i].getX()-size ) <= (300+85) && ( r[i].getY()+size ) >= 150 && ( r[i].getY()-size ) <= (150+142) )
 			{
 				r[i].setSpecialCollision(2);
+				//System.out.println("hustawka");//
+				r[i].k=Color.RED;//
 				return;
 			}
 			
-			if(r[i].getX()+size/2>=305 && r[i].getX()-size/2<=305+118 && r[i].getY()+size/2>=449 && r[i].getY()-size/2<=449+83)
+			if( ( r[i].getX()+size ) >= 305 && ( r[i].getX()-size ) <= (305+118) && ( r[i].getY()+size ) >= 449 && ( r[i].getY()-size ) <= (449+93) )
 			{
 				r[i].setSpecialCollision(3);
+				//System.out.println("zjezdzalnia");//
+				r[i].k=Color.RED;//
 				return;
 			}
 			
-			if(r[i].getX()+size/2>=281 && r[i].getX()-size/2<=281+24 && r[i].getY()+size/2>=378 && r[i].getY()-size/2<=378+68)
+			if( ( r[i].getX()+size ) >= 281 && ( r[i].getX()-size ) <= (281+24) && ( r[i].getY()+size ) >= 355 && ( r[i].getY()-size ) <= (355+90) )
 			{
 				r[i].setSpecialCollision(4);
+				//System.out.println("lawka");//
+				r[i].k=Color.RED;//
 				return;
 			}
 			
 			r[i].clearSpecialCollision();
+			r[i].k=Color.GREEN;//
 		}
 	}
 	
@@ -71,8 +82,8 @@ public class Collisions extends Thread
 	{
 		while(true)
 		{
-			checkCollisions();
 			checkSpecialCollisions();
+			checkCollisions();
 		}
 	}
 }
