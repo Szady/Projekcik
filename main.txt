@@ -9,7 +9,6 @@ public class PFrame extends JFrame
 {
 	public PRunnable r[];
 	public Thread t[];
-	public Collisions c;
 	public Karuzela k;
 	public Hustawka h;
 	public int size;
@@ -22,26 +21,22 @@ public class PFrame extends JFrame
 		pack();
 		
 		size = 17;	//wielkosc ludzika
-		n = 10;	//ilosc ludzikow
+		n = 20;	//ilosc ludzikow
 		r = new PRunnable[n];
 		t = new Thread[n];
 		Random rnd = new Random();
 
 		for(int i=0;i<n;i++)
 		{
-			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50,size,n);
+			r[i] = new PRunnable(this,rnd.nextInt(390)+40,rnd.nextInt(520)+50,size,n,i);
 			t[i] = new Thread(r[i]);
-			t[i].setPriority(1);
 		}
 		
 		k = new Karuzela(this);
 		h = new Hustawka(this);
-		c = new Collisions(r,size,n);
-		c.setPriority(10);
 		k.start();
 		h.start();
-		c.start();
-		
+
 		for(int i=0;i<n;i++)
 			t[i].start();
 	}
@@ -143,15 +138,23 @@ public class PFrame extends JFrame
 			}
 			
 			//kolizje
-			//karuzela = (70, 450); 85x85
-			//hustawka = (300, 150); 85x142
-			//zjezdzalnia = (305,449); 118x93
-			//lawka = (281,355); 24x90
+			//karuzela = (112, 492)x85
+			//hustawka = (343, 221)x142
+			//zjezdzalnia = (363, 494)x125
+			//lawka = (299, 361)x49
 			g2.setColor(Color.RED);
-			g2.drawRect(70, 450, 85, 85);
-			g2.drawRect(300, 150, 85, 142);
-			g2.drawRect(305, 449, 118, 93);
-			g2.drawRect(281, 355, 24, 90);
+			
+			g2.drawLine(112, 492, 112, 492);
+			g2.drawOval(70, 450, 85, 85);
+			
+			g2.drawLine(343, 221, 343, 221);
+			g2.drawOval(272, 150, 142, 142);
+			
+			g2.drawLine(363, 494, 363, 494);
+			g2.drawOval(301, 432, 125, 125);
+			
+			g2.drawLine(299, 361, 299, 361);
+			g2.drawOval(275, 337, 49, 49);
 		}
 		
 		//zwraca wymiary komponentu
